@@ -31,12 +31,23 @@ class Task(db.Model):
     
 # ================== Page Render ================== 
 @app.route("/")
-def home():
+def home_page():
     return render_template("index.html")
 
-@app.route("/tasks.html")
-def tasks():
+@app.route("/tasks.html", methods=["GET"])
+def tasks_page():
     return render_template('tasks.html')
+
+@app.route("/api/tasks", methods=["POST"])
+def submit_task():
+    title = request.form.get("title")
+    description = request.form.get("description")
+    status = request.form.get("status")
+    due_date = request.form.get("due_date")
+
+    print(title, description, status, due_date)
+
+    return redirect(url_for("tasks_page"))
 
 
 # ================== Program Start ================== 
