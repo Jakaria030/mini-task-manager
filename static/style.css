@@ -151,18 +151,33 @@ body {
     opacity: 0.8;
 }
 
-/* ================== Responsive ================== */
-@media(max-width: 768px) {
-    .main.tasks form {
-        flex-direction: column;
-    }
+.task-filters {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
 
-    .main.tasks form button {
-        width: 100%;
-    }
+.task-filters select,
+.task-filters input {
+    padding: 6px 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    outline: none;
+    transition: border-color 0.2s, box-shadow 0.2s;
+}
 
-    .main.home .container {
-        height: auto;
-        padding: 50px 20px;
-    }
+.task-filters select:focus,
+.task-filters input:focus {
+    border-color: #4a90e2;
+    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+}
+
+.task-filters input::placeholder {
+    color: #999;
+}
+
+.task-filters select {
+    background-color: #fff;
+    cursor: pointer;
 }

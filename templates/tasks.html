@@ -26,8 +26,34 @@
                 <button type="submit">Add</button>
             </form>
 
+
+            <!-- Task List Title -->
+            <div style="display: flex; justify-content: space-between; align-items: center;">
+                <h2>Tasks List</h2>
+
+                <!-- Filters -->
+                <div class="task-filters">
+                    <!-- Status filter -->
+                    <select name="status">
+                        <option value="">Status</option>
+                        <option value="todo">To Do</option>
+                        <option value="in_progress">In Progress</option>
+                        <option value="done">Done</option>
+                    </select>
+
+                    <!-- Search -->
+                    <input type="search" name="q" placeholder="Search title or description">
+
+                    <!-- Sort -->
+                    <select name="sort">
+                        <option value="">Sort By</option>
+                        <option value="due_date">Due Date</option>
+                        <option value="created_at">Created At</option>
+                    </select>
+                </div>
+            </div>
+
             <!-- Tasks list Table-->
-            <h2>Tasks List</h2>
             <table>
                 <!-- Table heading -->
                 <thead>
