@@ -4,13 +4,86 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Mini Task Manager</title>
+    <title>Tasks Page</title>
     <link rel="stylesheet" href="static/style.css">
 </head>
 
 <body>
 
-    All tasks Tasks
+    <main class="main tasks">
+        <div class="container">
+            <!-- Add Task Form -->
+            <h2>Add Task</h2>
+            <form>
+                <input type="text" placeholder="Title*" required>
+                <input type="text" placeholder="Description">
+                <select value="todo">
+                    <option value="todo">To Do</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="done">Done</option>
+                </select>
+                <input type="date">
+                <button type="submit">Add</button>
+            </form>
+
+            <!-- Tasks list Table-->
+            <h2>Tasks List</h2>
+            <table>
+                <!-- Table heading -->
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>Title</th>
+                        <th>Description</th>
+                        <th>Status</th>
+                        <th>Created At</th>
+                        <th>Due Date</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+
+                <!-- Table body -->
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>Example Task</td>
+                        <td>Sample description</td>
+                        <td>To Do</td>
+                        <td>2026-01-30T10:00:00Z</td>
+                        <td>2026-02-05</td>
+                        <td class="action-buttons">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Another Task</td>
+                        <td>Another description</td>
+                        <td>In Progress</td>
+                        <td>2026-01-30T11:00:00Z</td>
+                        <td>2026-02-10</td>
+                        <td class="action-buttons">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>Another Task</td>
+                        <td>Another description</td>
+                        <td>In Progress</td>
+                        <td>2026-01-30T11:00:00Z</td>
+                        <td>2026-02-10</td>
+                        <td class="action-buttons">
+                            <button class="edit-btn">Edit</button>
+                            <button class="delete-btn">Delete</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </main>
 
 </body>
 

@@ -1,56 +1,168 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ================== General Styles ================== */
+body {
     font-family: Arial, sans-serif;
-}
-
-.main {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    min-height: 100vh;
-    background-color: #f0f0f0;
+    background-color: #f5f5f5;
+    margin: 20px;
+    padding: 0;
+    color: #333;
 }
 
 .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+/* Common Box Shadow & Rounded Corners */
+.box,
+.main.tasks .container {
+    background-color: #fff;
+    border-radius: 10px;
+    padding: 30px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* ================== Home Page ================== */
+.main.home .container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 100%;
-}
-
-.box {
-    background-color: #ffffff;
-    padding: 40px 60px;
-    border-radius: 10px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+    height: 80vh;
+    /* vertical centering */
     text-align: center;
-    max-width: 400px;
 }
 
-.box h1 {
+.main.home .box h1 {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+    color: #007bff;
+}
+
+.main.home .box p {
+    font-size: 1.2rem;
     margin-bottom: 20px;
-    font-size: 2rem;
-    color: #333333;
+    color: #555;
 }
 
-.box p {
-    margin-bottom: 30px;
-    color: #555555;
-    font-size: 1rem;
-}
-
-.box a {
+.main.home .box a {
     text-decoration: none;
-    display: inline-block;
+    background-color: #007bff;
+    color: #fff;
     padding: 12px 25px;
-    background-color: #2a2a2a;
-    color: #ffffff;
-    border-radius: 6px;
-    transition: background-color 0.3s ease;
+    border-radius: 5px;
+    transition: 0.3s;
 }
 
-.box a:hover {
-    background-color: #2575fc;
+.main.home .box a:hover {
+    background-color: #0056b3;
+}
+
+/* ================== Tasks Page ================== */
+/* Headings */
+.main.tasks h2 {
+    margin-bottom: 15px;
+    color: #007bff;
+}
+
+/* Form Styles */
+.main.tasks form {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 30px;
+}
+
+.main.tasks form input,
+.main.tasks form select,
+.main.tasks form button {
+    padding: 10px;
+    font-size: 14px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.main.tasks form input,
+.main.tasks form select {
+    flex: 1;
+    min-width: 150px;
+}
+
+.main.tasks form button {
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+    flex: 0 0 100px;
+    transition: 0.3s;
+}
+
+.main.tasks form button:hover {
+    background-color: #0056b3;
+}
+
+/* Table Styles */
+.main.tasks table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.main.tasks table th,
+.main.tasks table td {
+    padding: 12px;
+    border: 1px solid #ddd;
+    text-align: left;
+}
+
+.main.tasks table th {
+    background-color: #007bff;
+    color: #fff;
+}
+
+.main.tasks table tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
+
+/* Action Buttons */
+.action-buttons button {
+    padding: 5px 10px;
+    font-size: 12px;
+    border: none;
+    border-radius: 4px;
+    margin-right: 5px;
+    cursor: pointer;
+    transition: 0.3s;
+}
+
+.action-buttons .edit-btn {
+    background-color: #ffc107;
+    color: #333;
+}
+
+.action-buttons .edit-btn:hover {
+    opacity: 0.8;
+}
+
+.action-buttons .delete-btn {
+    background-color: #dc3545;
+    color: #fff;
+}
+
+.action-buttons .delete-btn:hover {
+    opacity: 0.8;
+}
+
+/* ================== Responsive ================== */
+@media(max-width: 768px) {
+    .main.tasks form {
+        flex-direction: column;
+    }
+
+    .main.tasks form button {
+        width: 100%;
+    }
+
+    .main.home .container {
+        height: auto;
+        padding: 50px 20px;
+    }
 }
