@@ -5,7 +5,7 @@ from datetime import datetime, timezone
 app = Flask(__name__)
 
 # ================== POSTGRESQL Connection ================== 
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/taskdb'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost:5432/tasksdb'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
@@ -36,16 +36,29 @@ def home_page():
 
 @app.route("/tasks.html", methods=["GET"])
 def tasks_page():
-    return render_template('tasks.html')
+    tasks = Task.query.all()
+    return render_template('tasks.html', tasks=tasks)
 
 @app.route("/api/tasks", methods=["POST"])
 def submit_task():
     title = request.form.get("title")
     description = request.form.get("description")
-    status = request.form.get("status")
-    due_date = request.form.get("due_date")
+    status = request.form.get("status", "todo")
+    due_date_str = request.form.get("due_date")
 
-    print(title, description, status, due_date)
+    due_date = None
+    if due_date_str:
+        due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+
+    new_task = Task(
+        title=title,
+        description=description,
+        status=status,
+        due_date=due_date
+    )
+
+    db.session.add(new_task)
+    db.session.commit()
 
     return redirect(url_for("tasks_page"))
 
@@ -54,4 +67,5 @@ def submit_task():
 if __name__ == '__main__':
     with app.app_context():
         db.create_all()
+        print("Table Created!")
     app.run(debug=True)

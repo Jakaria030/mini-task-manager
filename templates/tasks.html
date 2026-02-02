@@ -69,45 +69,21 @@
 
                 <!-- Table body -->
                 <tbody>
+                    {% for task in tasks%}
                     <tr>
-                        <td>1</td>
-                        <td>Example Task</td>
-                        <td>Sample description</td>
-                        <td>To Do</td>
-                        <td>2026-01-30T10:00:00Z</td>
-                        <td>2026-02-05</td>
+                        <td>{{task.id}}</td>
+                        <td>{{task.title}}</td>
+                        <td>{{task.description}}</td>
+                        <td>{{task.status.replace('_', ' ') | title}}</td>
+                        <td>{{task.created_at}}</td>
+                        <td>{{task.due_date}}</td>
                         <td class="action-buttons">
                             <button class="mark-btn">Mark Done</button>
                             <button class="edit-btn">Edit</button>
                             <button class="delete-btn">Delete</button>
                         </td>
                     </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Another Task</td>
-                        <td>Another description</td>
-                        <td>In Progress</td>
-                        <td>2026-01-30T11:00:00Z</td>
-                        <td>2026-02-10</td>
-                        <td class="action-buttons">
-                            <button class="mark-btn">Mark Done</button>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td>2</td>
-                        <td>Another Task</td>
-                        <td>Another description</td>
-                        <td>In Progress</td>
-                        <td>2026-01-30T11:00:00Z</td>
-                        <td>2026-02-10</td>
-                        <td class="action-buttons">
-                            <button class="mark-btn">Mark Done</button>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
-                        </td>
-                    </tr>
+                    {% endfor %}
                 </tbody>
             </table>
         </div>
