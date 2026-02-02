@@ -1,6 +1,31 @@
 from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
+import logging
+import os
+
+
+filename = "logs/tasks.log"
+folder = os.path.dirname(filename)
+
+# Create logs folder if not exists
+if folder:
+    os.makedirs(folder, exist_ok=True)
+
+# Logger factory
+def get_logger(name="tasks"):
+    logger = logging.getLogger(name)
+    logger.setLevel(logging.DEBUG)
+
+    file_handler = logging.FileHandler(filename)
+    formatter = logging.Formatter("%(asctime)s | %(levelname)s | %(name)s | %(message)s")
+    file_handler.setFormatter(formatter)
+
+    logger.addHandler(file_handler)
+
+    return logger
+
+logger = get_logger()
 
 app = Flask(__name__)
 
@@ -74,14 +99,16 @@ def create_task():
     due_date = data.get("due_date")
 
     if title is None:
+        logger.error("Title is not found")
         return jsonify({
             "error": "Title is not found",
             "status": 404
         }), 404
     
     if status and status not in ["todo", "in_progress", "done"]:
+        logger.error("Status must be 'todo', 'in_progress', 'done'")
         return jsonify({
-            "error": "Status must be 'todo', 'in_progress', 'done'.",
+            "error": "Status must be 'todo', 'in_progress', 'done'",
             "status": 400
         }), 400
 
@@ -95,6 +122,7 @@ def create_task():
     db.session.add(new_task)
     db.session.commit()
     
+    logger.info("Task created successfully")
     return jsonify({
         "success": "Task created successfully",
         "status": 201,
@@ -119,6 +147,7 @@ def get_tasks():
 
     tasks = query.all()
 
+    logger.info("Task fetched successfully")
     return jsonify({
         "success": "Tasks fetched successfully",
         "status": 200,
@@ -138,6 +167,7 @@ def toggle_task_status(task_id):
 
     db.session.commit()
 
+    logger.info("Toggle status successfully")
     return jsonify({
         "success": "Toggle status successfully",
         "status-code": 200,
@@ -148,14 +178,17 @@ def toggle_task_status(task_id):
 @app.route("/api/tasks/<int:task_id>", methods=["GET"])
 def get_task(task_id):
     task = Task.query.get(task_id)
+
     if not task:
+        logger.error(f"Task not found for id: {task_id}")
         return jsonify({ 
-            "error": "Task not found", 
+            "error": f"Task not found for id: {task_id}", 
             "status": 404
         }), 404
 
+    logger.info("Task fetched successfully")
     return jsonify({
-        "success": "Task retrieved successfully",
+        "success": "Task fetched successfully",
         "status": 200,
         "data": task.to_dict()
     }), 200
@@ -164,20 +197,24 @@ def get_task(task_id):
 @app.route("/api/tasks/<int:task_id>", methods=["PUT"])
 def update_task(task_id):
     task = Task.query.get(task_id)
+
     if not task:
+        logger.error(f"Task not found {task_id}")
         return jsonify({
-            "error": "Task not found",
+            "error": f"Task not found {task_id}",
             "status": 404
         }), 404
 
     data = request.get_json()
     if not data:
+        logger.error("No data provided")
         return jsonify({
             "error": "No data provided",
             "status": 400
         }), 400
 
     if data.get("status", None) and data.get("status") not in ["todo", "in_progress", "done"]:
+        logger.error("Status must be 'todo', 'in_progress', 'done'")
         return jsonify({
             "error": "Status must be 'todo', 'in_progress', 'done'",
             "status": 400
@@ -190,6 +227,7 @@ def update_task(task_id):
 
     db.session.commit()
 
+    logger.info("Task updated successfully")
     return jsonify({
         "success": "Task updated successfully",
         "status": 200,
@@ -200,15 +238,18 @@ def update_task(task_id):
 @app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
 def delete_task(task_id):
     task = Task.query.get(task_id)
+
     if not task:
+        logger.error(f"Task not found for id: {task_id}")
         return jsonify({
-            "error": "Task not found",
+            "error": f"Task not found for id: {task_id}",
             "status": 404
         }), 404
 
     db.session.delete(task)
     db.session.commit()
 
+    logger.info("Task deleted successfully")
     return jsonify({
         "success": "Task deleted successfully",
         "status": 200
