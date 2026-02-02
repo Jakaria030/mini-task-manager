@@ -133,7 +133,7 @@
             if (sort) params.append("sort", sort);
 
             try {
-                const res = await fetch(`/tasks/filter?${params.toString()}`);
+                const res = await fetch(`/api/tasks?${params.toString()}`, { method: "GET" });
                 if (!res.ok) throw new Error("Network response was not ok");
 
                 const tasks = await res.json();

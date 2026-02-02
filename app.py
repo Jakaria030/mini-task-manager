@@ -77,7 +77,7 @@ def toggle_task_status(task_id):
 
 from flask import request, jsonify
 
-@app.route("/tasks/filter")
+@app.route("/api/tasks", methods=["GET"])
 def filter_tasks():
     status = request.args.get("status")
     q = request.args.get("q")
