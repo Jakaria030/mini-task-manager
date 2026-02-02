@@ -39,6 +39,7 @@ def tasks_page():
     tasks = Task.query.all()
     return render_template('tasks.html', tasks=tasks)
 
+
 @app.route("/api/tasks", methods=["POST"])
 def submit_task():
     title = request.form.get("title")
@@ -94,6 +95,23 @@ def filter_tasks():
 
     tasks = query.all()
     return jsonify([task.to_dict() for task in tasks])
+
+
+# get single task by task id
+@app.route("/api/tasks/<int:task_id>", methods=["GET"])
+def get_task(task_id):
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({ 
+            "error": "Task not found", 
+            "status": 404
+        }), 404
+
+    return jsonify({
+        "success": "Task retrieved successfully",
+        "status": 200,
+        "data": task.to_dict()
+    }), 200
 
 # ================== Program Start ================== 
 if __name__ == '__main__':
