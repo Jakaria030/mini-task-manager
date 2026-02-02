@@ -75,6 +75,26 @@ def toggle_task_status(task_id):
     db.session.commit()
     return {"status": task.status}
 
+from flask import request, jsonify
+
+@app.route("/tasks/filter")
+def filter_tasks():
+    status = request.args.get("status")
+    q = request.args.get("q")
+    sort = request.args.get("sort")
+
+    query = Task.query
+
+    if status:
+        query = query.filter(Task.status == status)
+    if q:
+        query = query.filter((Task.title.ilike(f"%{q}%")) | (Task.description.ilike(f"%{q}%")))
+    if sort in ["due_date","created_at"]:
+        query = query.order_by(getattr(Task, sort))
+
+    tasks = query.all()
+    return jsonify([task.to_dict() for task in tasks])
+
 # ================== Program Start ================== 
 if __name__ == '__main__':
     with app.app_context():

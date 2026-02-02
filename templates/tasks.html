@@ -28,10 +28,10 @@
 
             <!-- Task List Title -->
             <div style="display: flex; justify-content: space-between; align-items: center;">
-                <h2>Tasks List</h2>
+                <h2 style="margin-bottom: 30px;">Tasks List</h2>
 
                 <!-- Filters -->
-                <div class="task-filters">
+                <form class="task-filters" id="filter_form">
                     <!-- Status filter -->
                     <select name="status">
                         <option value="">Status</option>
@@ -49,7 +49,10 @@
                         <option value="due_date">Due Date</option>
                         <option value="created_at">Created At</option>
                     </select>
-                </div>
+
+                    <!-- filter button -->
+                    <button type="submit">Filter</button>
+                </form>
             </div>
 
             <!-- Tasks list Table-->
@@ -89,26 +92,80 @@
 
 
     <script>
-        document.querySelectorAll(".mark-btn").forEach(btn => {
-            btn.addEventListener("click", async () => {
-                const taskId = btn.dataset.id;
+        // toggle status
+        function attachToggleButtons() {
+            document.querySelectorAll(".mark-btn").forEach(btn => {
+                btn.addEventListener("click", async () => {
+                    const taskId = btn.dataset.id;
 
-                try {
-                    const res = await fetch(`/api/tasks/${taskId}/toggle`, { method: "POST" });
+                    try {
+                        const res = await fetch(`/api/tasks/${taskId}/toggle`, { method: "POST" });
 
-                    if (!res.ok) throw new Error("Network response was not ok");
+                        if (!res.ok) throw new Error("Network response was not ok");
 
-                    const data = await res.json();
-                    const row = btn.closest("tr");
-                    const statusCell = row.querySelector(`td[data-id='${taskId}']`);
-                    statusCell.textContent = data.status.replace('_', ' ');
+                        const data = await res.json();
+                        const row = btn.closest("tr");
+                        const statusCell = row.querySelector(`td[data-id='${taskId}']`);
+                        statusCell.textContent = data.status.replace('_', ' ');
 
-                } catch (err) {
-                    console.error(err);
-                    alert("Failed to update status");
-                }
+                    } catch (err) {
+                        console.error(err);
+                        alert("Failed to update status");
+                    }
+                });
             });
+
+        }
+
+        // filter
+        document.getElementById("filter_form").addEventListener("submit", async (e) => {
+            e.preventDefault();
+
+            const form = e.target;
+
+            const status = form.status.value;
+            const query = form.q.value;
+            const sort = form.sort.value;
+
+            const params = new URLSearchParams();
+            if (status) params.append("status", status);
+            if (query) params.append("q", query);
+            if (sort) params.append("sort", sort);
+
+            try {
+                const res = await fetch(`/tasks/filter?${params.toString()}`);
+                if (!res.ok) throw new Error("Network response was not ok");
+
+                const tasks = await res.json();
+
+                // Now update the table dynamically
+                const tbody = document.querySelector("tbody");
+                tbody.innerHTML = "";
+
+                tasks.forEach(task => {
+                    const tr = document.createElement("tr");
+                    tr.innerHTML = `
+                        <td>${task.id}</td>
+                        <td>${task.title}</td>
+                        <td>${task.description}</td>
+                        <td data-id="${task.id}">${task.status.replace('_', ' ')}</td>
+                        <td>${task.created_at}</td>
+                        <td>${task.due_date || ''}</td>
+                        <td class="action-buttons">
+                            <button class="mark-btn" data-id="${task.id}">Toggle</button>
+                        </td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+                attachToggleButtons();
+
+            } catch (err) {
+                console.error(err);
+                alert("Failed to fetch filtered tasks");
+            }
         });
+
+        attachToggleButtons();
     </script>
 
 

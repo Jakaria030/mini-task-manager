@@ -133,18 +133,8 @@ body {
     transition: 0.3s;
 }
 
-.action-buttons .edit-btn {
-    background-color: #ffc107;
-    color: #333;
-}
-
 .action-buttons .edit-btn:hover {
     opacity: 0.8;
-}
-
-.action-buttons .delete-btn {
-    background-color: #dc3545;
-    color: #fff;
 }
 
 .action-buttons .mark-btn {
