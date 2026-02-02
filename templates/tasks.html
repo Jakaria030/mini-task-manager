@@ -57,7 +57,7 @@
                 <!-- Table heading -->
                 <thead>
                     <tr>
-                        <th>SL/NO</th>
+                        <th>ID</th>
                         <th>Title</th>
                         <th>Description</th>
                         <th>Status</th>
@@ -74,13 +74,11 @@
                         <td>{{task.id}}</td>
                         <td>{{task.title}}</td>
                         <td>{{task.description}}</td>
-                        <td>{{task.status.replace('_', ' ') | title}}</td>
+                        <td data-id="{{task.id}}">{{task.status.replace('_', ' ')}}</td>
                         <td>{{task.created_at}}</td>
                         <td>{{task.due_date}}</td>
                         <td class="action-buttons">
-                            <button class="mark-btn">Mark Done</button>
-                            <button class="edit-btn">Edit</button>
-                            <button class="delete-btn">Delete</button>
+                            <button class="mark-btn" data-id="{{ task.id }}">Toggle</button>
                         </td>
                     </tr>
                     {% endfor %}
@@ -88,6 +86,32 @@
             </table>
         </div>
     </main>
+
+
+    <script>
+        document.querySelectorAll(".mark-btn").forEach(btn => {
+            btn.addEventListener("click", async () => {
+                const taskId = btn.dataset.id;
+
+                try {
+                    const res = await fetch(`/api/tasks/${taskId}/toggle`, { method: "POST" });
+
+                    if (!res.ok) throw new Error("Network response was not ok");
+
+                    const data = await res.json();
+                    const row = btn.closest("tr");
+                    const statusCell = row.querySelector(`td[data-id='${taskId}']`);
+                    statusCell.textContent = data.status.replace('_', ' ');
+
+                } catch (err) {
+                    console.error(err);
+                    alert("Failed to update status");
+                }
+            });
+        });
+    </script>
+
+
 
 </body>
 

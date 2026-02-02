@@ -62,6 +62,18 @@ def submit_task():
 
     return redirect(url_for("tasks_page"))
 
+@app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
+def toggle_task_status(task_id):
+    task = Task.query.get_or_404(task_id)
+
+    statuses = ["todo", "in_progress", "done"]
+
+    current_index = statuses.index(task.status.lower())
+    next_index = (current_index + 1) % len(statuses)
+    task.status = statuses[next_index]
+
+    db.session.commit()
+    return {"status": task.status}
 
 # ================== Program Start ================== 
 if __name__ == '__main__':
