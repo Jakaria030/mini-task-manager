@@ -143,6 +143,25 @@ def update_task(task_id):
         "data": task.to_dict()
     }), 200
 
+
+# delete task by id
+@app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
+def delete_task(task_id):
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({
+            "error": "Task not found",
+            "status": 404
+        }), 404
+
+    db.session.delete(task)
+    db.session.commit()
+
+    return jsonify({
+        "success": "Task deleted successfully",
+        "status": 200
+    }), 200
+
 # ================== Program Start ================== 
 if __name__ == '__main__':
     with app.app_context():
