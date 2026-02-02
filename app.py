@@ -95,22 +95,9 @@ def create_task():
         "data": new_task.to_dict()
     }), 201
 
-
-@app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
-def toggle_task_status(task_id):
-    task = Task.query.get_or_404(task_id)
-
-    statuses = ["todo", "in_progress", "done"]
-
-    current_index = statuses.index(task.status.lower())
-    next_index = (current_index + 1) % len(statuses)
-    task.status = statuses[next_index]
-
-    db.session.commit()
-    return {"status": task.status}
-
+# get tasks - all tasks or filter
 @app.route("/api/tasks", methods=["GET"])
-def filter_tasks():
+def get_tasks():
     status = request.args.get("status")
     q = request.args.get("q")
     sort = request.args.get("sort")
@@ -125,7 +112,27 @@ def filter_tasks():
         query = query.order_by(getattr(Task, sort))
 
     tasks = query.all()
-    return jsonify([task.to_dict() for task in tasks])
+
+    return jsonify({
+        "success": "Tasks fetched successfully",
+        "status": 200,
+        "data": [task.to_dict() for task in tasks]
+    }), 200
+
+
+@app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
+def toggle_task_status(task_id):
+    task = Task.query.get_or_404(task_id)
+
+    statuses = ["todo", "in_progress", "done"]
+
+    current_index = statuses.index(task.status.lower())
+    next_index = (current_index + 1) % len(statuses)
+    task.status = statuses[next_index]
+
+    db.session.commit()
+    return {"status": task.status}
+
 
 
 # get single task by task id
