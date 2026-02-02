@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for, jsonify
+from flask import Flask, render_template, request, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from datetime import datetime, timezone
 
@@ -9,7 +9,7 @@ app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhos
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 db = SQLAlchemy(app)
 
-# ================== Models ==================
+# ================== Model ==================
 class Task(db.Model):
     __tablename__ = 'tasks'
     id = db.Column(db.Integer, primary_key=True)
@@ -39,7 +39,7 @@ def tasks_page():
     tasks = Task.query.all()
     return render_template('tasks.html', tasks=tasks)
 
-
+# ================== Router ================== 
 # @app.route("/api/tasks", methods=["POST"])
 # def submit_task():
 #     title = request.form.get("title")
