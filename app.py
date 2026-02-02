@@ -78,6 +78,12 @@ def create_task():
             "error": "Title is not found",
             "status": 404
         }), 404
+    
+    if status and status not in ["todo", "in_progress", "done"]:
+        return jsonify({
+            "error": "Status must be 'todo', 'in_progress', 'done'.",
+            "status": 400
+        }), 400
 
     new_task = Task(
         title=title,
@@ -171,6 +177,12 @@ def update_task(task_id):
             "status": 400
         }), 400
 
+    if data.get("status", None) and data.get("status") not in ["todo", "in_progress", "done"]:
+        return jsonify({
+            "error": "Status must be 'todo', 'in_progress', 'done'",
+            "status": 400
+        }), 400
+    
     task.title = data.get("title", task.title)
     task.description = data.get("description", task.description)
     task.status = data.get("status", task.status)
