@@ -113,6 +113,36 @@ def get_task(task_id):
         "data": task.to_dict()
     }), 200
 
+# update task
+@app.route("/api/tasks/<int:task_id>", methods=["PUT"])
+def update_task(task_id):
+    task = Task.query.get(task_id)
+    if not task:
+        return jsonify({
+            "error": "Task not found",
+            "status": 404
+        }), 404
+
+    data = request.get_json()
+    if not data:
+        return jsonify({
+            "error": "No data provided",
+            "status": 400
+        }), 400
+
+    task.title = data.get("title", task.title)
+    task.description = data.get("description", task.description)
+    task.status = data.get("status", task.status)
+    task.due_date = data.get("due_date", task.due_date)
+
+    db.session.commit()
+
+    return jsonify({
+        "success": "Task updated successfully",
+        "status": 200,
+        "data": task.to_dict()
+    }), 200
+
 # ================== Program Start ================== 
 if __name__ == '__main__':
     with app.app_context():
