@@ -76,8 +76,6 @@ def toggle_task_status(task_id):
     db.session.commit()
     return {"status": task.status}
 
-from flask import request, jsonify
-
 @app.route("/api/tasks", methods=["GET"])
 def filter_tasks():
     status = request.args.get("status")
