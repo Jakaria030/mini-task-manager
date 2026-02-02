@@ -40,16 +40,44 @@ def tasks_page():
     return render_template('tasks.html', tasks=tasks)
 
 
-@app.route("/api/tasks", methods=["POST"])
-def submit_task():
-    title = request.form.get("title")
-    description = request.form.get("description")
-    status = request.form.get("status", "todo")
-    due_date_str = request.form.get("due_date")
+# @app.route("/api/tasks", methods=["POST"])
+# def submit_task():
+#     title = request.form.get("title")
+#     description = request.form.get("description")
+#     status = request.form.get("status", "todo")
+#     due_date_str = request.form.get("due_date")
 
-    due_date = None
-    if due_date_str:
-        due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+#     due_date = None
+#     if due_date_str:
+#         due_date = datetime.strptime(due_date_str, "%Y-%m-%d").date()
+
+#     new_task = Task(
+#         title=title,
+#         description=description,
+#         status=status,
+#         due_date=due_date
+#     )
+
+#     db.session.add(new_task)
+#     db.session.commit()
+
+#     return redirect(url_for("tasks_page"))
+
+# create task
+@app.route("/api/tasks", methods=["POST"])
+def create_task():
+    data = request.get_json()
+
+    title = data.get("title")
+    description = data.get("description")
+    status = data.get("status")
+    due_date = data.get("due_date")
+
+    if title is None:
+        return jsonify({
+            "error": "Title is not found",
+            "status": 404
+        }), 404
 
     new_task = Task(
         title=title,
@@ -60,8 +88,13 @@ def submit_task():
 
     db.session.add(new_task)
     db.session.commit()
+    
+    return jsonify({
+        "success": "Task created successfully",
+        "status": 201,
+        "data": new_task.to_dict()
+    }), 201
 
-    return redirect(url_for("tasks_page"))
 
 @app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
 def toggle_task_status(task_id):
