@@ -119,7 +119,7 @@ def get_tasks():
         "data": [task.to_dict() for task in tasks]
     }), 200
 
-
+# toggle status cyclic order
 @app.route("/api/tasks/<int:task_id>/toggle", methods=["POST"])
 def toggle_task_status(task_id):
     task = Task.query.get_or_404(task_id)
@@ -131,9 +131,12 @@ def toggle_task_status(task_id):
     task.status = statuses[next_index]
 
     db.session.commit()
-    return {"status": task.status}
 
-
+    return jsonify({
+        "success": "Toggle status successfully",
+        "status-code": 200,
+        "status": task.status
+    }), 200
 
 # get single task by task id
 @app.route("/api/tasks/<int:task_id>", methods=["GET"])
@@ -180,7 +183,6 @@ def update_task(task_id):
         "status": 200,
         "data": task.to_dict()
     }), 200
-
 
 # delete task by id
 @app.route("/api/tasks/<int:task_id>", methods=["DELETE"])
